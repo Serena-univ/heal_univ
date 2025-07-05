@@ -1,3 +1,4 @@
+html_get_version = """
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -26,8 +27,8 @@
     <strong>2. 장소 선택:</strong><br>
     <select id="mainCategory" onchange="updateLocation()">
       <option value="">대분류</option>
-      <option value="서울">서울</option>
-      <option value="부산">부산</option>
+      <option value="동대문구">동대문구</option>
+      <option value="광진구">광진구</option>
     </select>
     <select id="middleCategory">
       <option value="">중분류</option>
@@ -88,6 +89,8 @@
     function selectResult(result) {
       if (result === 'O') {
         document.getElementById("sub-options").style.display = 'block';
+      } else {
+        submitData('X');
       }
     }
 
@@ -118,23 +121,33 @@
           sub: sub
         },
         result: result,
-        sub_result: subResult
+        sub_result: subResult,
+        age: subResult === "찾기" ? age : "",
+        reason: subResult === "비합" ? reason : ""
       };
 
-      if (subResult === "비합") data.reason = reason;
-      if (subResult === "찾기") data.age = parseInt(age);
+      const params = new URLSearchParams({
+        team: data.team,
+        main: data.location.main,
+        middle: data.location.middle,
+        sub: data.location.sub,
+        result: data.result,
+        sub_result: data.sub_result,
+        age: data.age,
+        reason: data.reason
+      });
 
-      fetch("https://script.google.com/macros/s/AKfycbxkhDUi1lxRkGHFxA7JVCWKlhUvIWbAD8xhxpEbN1ZCFN5b7PIIQIFZHbjRMo2OCMlj/exec", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      })
-      .then(res => res.text())
-      .then(txt => alert("✅ 전송 완료: " + txt))
-      .catch(err => alert("❌ 전송 실패: " + err));
+      fetch("https://script.google.com/macros/s/AKfycbxkhDUi1lxRkGHFxA7JVCWKlhUvIWbAD8xhxpEbN1ZCFN5b7PIIQIFZHbjRMo2OCMlj/exec?" + params.toString())
+        .then(res => res.text())
+        .then(txt => alert("✅ 전송 완료: " + txt))
+        .catch(err => alert("❌ 전송 실패: " + err));
     }
   </script>
 </body>
 </html>
+"""
+
+from pathlib import Path
+path = Path("/mnt/data/team_log_ui_get_version.html")
+path.write_text(html_get_version, encoding="utf-8")
+path.name
