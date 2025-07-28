@@ -1,13 +1,14 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>기록 시스템</title>
   <style>
     body { font-family: Arial; padding: 20px; }
     .section { margin-bottom: 20px; }
-    button, select, input[type=number], input[type=text] { margin: 5px; padding: 5px 10px; }
+    button, select, input[type=number], input[type=text] {
+      margin: 5px; padding: 5px 10px;
+    }
     #sub-options, #reason-options, #age-input { display: none; }
     #customMiddleInput { display: none; }
   </style>
@@ -106,38 +107,26 @@
 
     function submitData(result, subResult = "", reason = "") {
       const main = document.getElementById("mainCategory").value;
-      const middleSelect = document.getElementById("middleCategory");
-      const customMiddle = document.getElementById("customMiddleInput").value;
-      const useCustomMiddle = document.getElementById("customMiddleCheck").checked;
-      const middle = useCustomMiddle ? customMiddle : middleSelect.value;
+      const middle = document.getElementById("customMiddleCheck").checked
+        ? document.getElementById("customMiddleInput").value
+        : document.getElementById("middleCategory").value;
       const sub = document.getElementById("subCategory").value;
       const age = document.getElementById("age").value;
 
-      const data = {
+      const params = new URLSearchParams({
         team: selectedTeam,
-        location: {
-          main: main,
-          middle: middle,
-          sub: sub
-        },
+        main: main,
+        middle: middle,
+        sub: sub,
         result: result,
         sub_result: subResult,
         age: subResult === "찾기" ? age : "",
         reason: subResult === "비합" ? reason : ""
-      };
-
-      const params = new URLSearchParams({
-        team: data.team,
-        main: data.location.main,
-        middle: data.location.middle,
-        sub: data.location.sub,
-        result: data.result,
-        sub_result: data.sub_result,
-        age: data.age,
-        reason: data.reason
       });
 
-      fetch("https://script.google.com/macros/s/AKfycbxkhDUi1lxRkGHFxA7JVCWKlhUvIWbAD8xhxpEbN1ZCFN5b7PIIQIFZHbjRMo2OCMlj/exec?" + params.toString())
+      const url = "https://<YOUR_NETLIFY_DOMAIN>.netlify.app/.netlify/functions/gas-proxy?" + params.toString();
+
+      fetch(url)
         .then(res => res.text())
         .then(txt => alert("✅ 전송 완료: " + txt))
         .catch(err => alert("❌ 전송 실패: " + err));

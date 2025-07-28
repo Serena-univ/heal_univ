@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-exports.handler = async function(event, context) {
+exports.handler = async function(event) {
   const params = event.queryStringParameters;
 
   const url = new URL("https://script.google.com/macros/s/AKfycbxkhDUi1lxRkGHFxA7JVCWKlhUvIWbAD8xhxpEbN1ZCFN5b7PIIQIFZHbjRMo2OCMlj/exec");
@@ -9,20 +9,17 @@ exports.handler = async function(event, context) {
   try {
     const response = await fetch(url.toString());
     const text = await response.text();
-
     return {
       statusCode: 200,
       headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET",
-        "Access-Control-Allow-Headers": "Content-Type"
+        "Access-Control-Allow-Origin": "*"
       },
       body: text
     };
-  } catch (error) {
+  } catch (err) {
     return {
       statusCode: 500,
-      body: "Error: " + error.toString()
+      body: "Error: " + err.toString()
     };
   }
 };
