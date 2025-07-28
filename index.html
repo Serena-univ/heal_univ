@@ -40,7 +40,6 @@
     <button onclick="selectTeam(4)" id="team4">4팀</button>
   </div>
 
- 
   <div class="section">
     <strong>2. 장소 선택:</strong><br>
     <select id="mainCategory" onchange="updateLocation()">
@@ -95,7 +94,6 @@
     <button onclick="closePopup()">닫기</button>
   </div>
 
-
   <script>
     let selectedTeam = "";
     let startTime = null, timerInterval;
@@ -113,27 +111,6 @@
         document.getElementById('timerDisplay').innerText = `⏱ 소요 시간: ${hours}시간 ${minutes}분`;
       }, 1000);
     }
-
-    function updateLocation() {
-      const gu = document.getElementById("mainCategory").value;
-      const middle = document.getElementById("middleCategory");
-      middle.innerHTML = "<option value=''>역 선택</option>";
-
-      if (!gu) return;
-    
-      fetch(`https://reliable-shortbread-37fbab.netlify.app/functions/gas-proxy?action=getStations&gu=${encodeURIComponent(gu)}`)
-        .then(res => res.json())
-        .then(data => {
-          data.forEach(station => {
-            const option = document.createElement("option");
-            option.value = station;
-            option.textContent = station;
-            middle.appendChild(option);
-          });
-        })
-        .catch(err => alert("역 목록 불러오기 실패: " + err));
-    }
-
 
     function endTimer() {
       clearInterval(timerInterval);
@@ -156,7 +133,6 @@
       }
       document.getElementById(`team${team}`).classList.add('active-team');
     }
-
   </script>
 </body>
 </html>
