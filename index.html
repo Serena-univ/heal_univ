@@ -8,7 +8,7 @@
     button, select, input[type="text"], input[type="number"] {
       margin: 5px; padding: 6px 10px; font-size: 14px;
     }
-    .active-team { background-color: #4caf50; color: white; }
+    .active-team { background-color: #4caf50 !important; color: white !important; }
     .section { margin-bottom: 20px; }
     #sub-options, #reason-options, #age-input { display: none; }
     #customMiddleInput { display: none; }
@@ -29,7 +29,7 @@
   <div class="section">
     <button onclick="startTimer()">▶️ 시작</button>
     <button onclick="endTimer()">⏹ 종료</button>
-    <div id="timerDisplay">⏱ 소요 시간: 0분</div>
+    <div id="timerDisplay">⏱ 소요 시간: 0시간 0분</div>
   </div>
 
   <div class="section">
@@ -40,7 +40,61 @@
     <button onclick="selectTeam(4)" id="team4">4팀</button>
   </div>
 
-  <!-- 생략된 HTML은 이전 구조와 동일하되, 타이머 관련 JavaScript 함수만 아래에 수정 반영 -->
+ 
+  <div class="section">
+    <strong>2. 장소 선택:</strong><br>
+    <select id="mainCategory" onchange="updateLocation()">
+      <option value="">구 선택</option>
+      <option value="노원구">노원구</option>
+      <option value="도봉구">도봉구</option>
+      <option value="성북구">성북구</option>
+      <option value="강북구">강북구</option>
+      <option value="중랑구">중랑구</option>
+      <option value="광진구">광진구</option>
+      <option value="동대문구">동대문구</option>
+      <option value="종로구">종로구</option>
+      <option value="성동구">성동구</option>
+    </select>
+    <select id="middleCategory">
+      <option value="">역 선택</option>
+    </select>
+    <label><input type="checkbox" id="customMiddleCheck" onchange="toggleMiddleInput()"> 직접 입력</label>
+    <input type="text" id="customMiddleInput" placeholder="역 직접 입력">
+    <input type="text" id="subCategory" placeholder="상세위치 (입력 or 선택)">
+  </div>
+
+  <div class="section">
+    <strong>3. 결과 선택:</strong><br>
+    <button onclick="selectResult('O')">⭕</button>
+    <button onclick="submitData('X')">❌</button>
+  </div>
+
+  <div id="sub-options">
+    <strong>O 선택 → 하위 선택:</strong><br>
+    <button onclick="showAgeInput()">찾기</button>
+    <button onclick="showReasonOptions()">비합</button>
+  </div>
+
+  <div id="age-input">
+    <label>나이: <input type="number" id="age" min="0" max="120"></label>
+    <button onclick="submitData('O', '찾기')">전송</button>
+  </div>
+
+  <div id="reason-options">
+    <strong>비합 사유 선택:</strong><br>
+    <button onclick="submitData('O', '비합', '미성년자')">미성년자</button>
+    <button onclick="submitData('O', '비합', '27세 이상')">27세 이상</button>
+    <button onclick="submitData('O', '비합', '거리')">거리</button>
+    <button onclick="submitData('O', '비합', '환경')">환경</button>
+    <button onclick="submitData('O', '비합', '인성')">인성</button>
+  </div>
+
+  <div id="reportPopup">
+    <div id="reportContent"></div>
+    <button onclick="copyReport()">📋 복사</button>
+    <button onclick="closePopup()">닫기</button>
+  </div>
+
 
   <script>
     let selectedTeam = "";
@@ -53,8 +107,10 @@
       clearInterval(timerInterval);
       timerInterval = setInterval(() => {
         const now = new Date();
-        const elapsed = Math.floor((now - startTime) / 60000);
-        document.getElementById('timerDisplay').innerText = `⏱ 소요 시간: ${elapsed}분`;
+        const elapsedMs = now - startTime;
+        const minutes = Math.floor((elapsedMs / 60000) % 60);
+        const hours = Math.floor(elapsedMs / (1000 * 60 * 60));
+        document.getElementById('timerDisplay').innerText = `⏱ 소요 시간: ${hours}시간 ${minutes}분`;
       }, 1000);
     }
 
@@ -70,6 +126,14 @@
       `;
       document.getElementById("reportContent").innerHTML = summary;
       document.getElementById("reportPopup").style.display = "block";
+    }
+
+    function selectTeam(team) {
+      selectedTeam = team;
+      for (let i = 1; i <= 4; i++) {
+        document.getElementById(`team${i}`).classList.remove('active-team');
+      }
+      document.getElementById(`team${team}`).classList.add('active-team');
     }
   </script>
 </body>
