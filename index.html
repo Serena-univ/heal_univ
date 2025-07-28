@@ -54,12 +54,13 @@
       <option value="종로구">종로구</option>
       <option value="성동구">성동구</option>
     </select>
-    <select id="middleCategory">
+    <select id="middleCategory" onchange="loadDetailList()">
       <option value="">역 선택</option>
     </select>
     <label><input type="checkbox" id="customMiddleCheck" onchange="toggleMiddleInput()"> 직접 입력</label>
     <input type="text" id="customMiddleInput" placeholder="역 직접 입력">
-    <input type="text" id="subCategory" placeholder="상세위치 (입력 or 선택)">
+    <input type="text" id="subCategory" list="detailList" placeholder="상세위치 (입력 or 선택)">
+    <datalist id="detailList"></datalist>
   </div>
 
   <div class="section">
@@ -95,6 +96,8 @@
   </div>
 
   <script>
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbwdrG0hu8TLSJuwf2C1u6J-7TyVRaS8jZxt3b7JlreJzga1f27GHboxba7G6yLSsl_0/exec";
+
     let selectedTeam = "";
     let startTime = null, timerInterval;
     let totalLogs = 0, stopCount = 0, findCount = 0;
@@ -117,13 +120,22 @@
       const endTime = new Date();
       const duration = Math.floor((endTime - startTime) / 60000);
       const summary = `
-        ⏰ ${startTime.toLocaleTimeString()} ~ ${endTime.toLocaleTimeString()}, ${duration}분<br>
-        ▫️ 말걸기 : ${totalLogs}<br>
-        ▫️ 스탑 : ${stopCount}<br>
-        ▫️ 찾기 : ${findCount}
-      `;
-      document.getElementById("reportContent").innerHTML = summary;
+        ⏰ ${startTime.toLocaleTimeString()} ~ ${endTime.toLocaleTimeString()}, ${duration}분\n▫️ 말걸기 : ${totalLogs}\n▫️ 스탑 : ${stopCount}\n▫️ 찾기 : ${findCount}`;
+      document.getElementById("reportContent").innerHTML = summary.replace(/\n/g, "<br>");
       document.getElementById("reportPopup").style.display = "block";
+    }
+
+    function copyReport() {
+      const text = document.getElementById("reportContent").innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("복사 완료!");
+      }).catch(err => {
+        alert("복사 실패: " + err);
+      });
+    }
+
+    function closePopup() {
+      document.getElementById("reportPopup").style.display = "none";
     }
 
     function selectTeam(team) {
@@ -132,6 +144,44 @@
         document.getElementById(`team${i}`).classList.remove('active-team');
       }
       document.getElementById(`team${team}`).classList.add('active-team');
+    }
+
+    function updateLocation() {
+      const gu = document.getElementById("mainCategory").value;
+      const middle = document.getElementById("middleCategory");
+      middle.innerHTML = "<option value=''>역 선택</option>";
+      document.getElementById("detailList").innerHTML = "";
+      if (!gu) return;
+
+      fetch(`${GAS_URL}?action=getStations&gu=${encodeURIComponent(gu)}`)
+        .then(res => res.json())
+        .then(data => {
+          data.forEach(station => {
+            const option = document.createElement("option");
+            option.value = station;
+            option.textContent = station;
+            middle.appendChild(option);
+          });
+        })
+        .catch(err => alert("역 목록 불러오기 실패: " + err));
+    }
+
+    function loadDetailList() {
+      const gu = document.getElementById("mainCategory").value;
+      const station = document.getElementById("middleCategory").value;
+      const list = document.getElementById("detailList");
+      list.innerHTML = "";
+      if (!gu || !station) return;
+
+      fetch(`${GAS_URL}?action=getDetails&gu=${encodeURIComponent(gu)}&station=${encodeURIComponent(station)}`)
+        .then(res => res.json())
+        .then(data => {
+          data.forEach(loc => {
+            const opt = document.createElement("option");
+            opt.value = loc;
+            list.appendChild(opt);
+          });
+        });
     }
   </script>
 </body>
