@@ -102,6 +102,64 @@
     let startTime = null, timerInterval;
     let totalLogs = 0, stopCount = 0, findCount = 0;
 
+    function submitData(result, subResult = "", reason = "") {
+      const gu = document.getElementById("mainCategory").value;
+      const station = document.getElementById("customMiddleCheck").checked
+        ? document.getElementById("customMiddleInput").value
+        : document.getElementById("middleCategory").value;
+      const detail = document.getElementById("subCategory").value;
+      const age = document.getElementById("age")?.value || "";
+
+      const params = new URLSearchParams({
+        team: selectedTeam,
+        main: gu,
+        middle: station,
+        sub: detail,
+        result: result,
+        sub_result: subResult,
+        age: age,
+        reason: reason
+      });
+
+      fetch(GAS_URL + "?" + params.toString())
+        .then(res => res.text())
+        .then(data => {
+          alert("전송 완료!");
+          totalLogs++;
+          if (result === "O") {
+            stopCount++;
+            if (subResult === "찾기") findCount++;
+          }
+          document.getElementById("sub-options").style.display = "none";
+          document.getElementById("age-input").style.display = "none";
+          document.getElementById("reason-options").style.display = "none";
+          document.getElementById("age").value = "";
+        })
+        .catch(err => alert("전송 실패: " + err));
+    }
+
+    function selectResult(res) {
+      if (res === "O") {
+        document.getElementById("sub-options").style.display = "block";
+      }
+    }
+
+    function showAgeInput() {
+      document.getElementById("age-input").style.display = "block";
+      document.getElementById("reason-options").style.display = "none";
+    }
+
+    function showReasonOptions() {
+      document.getElementById("age-input").style.display = "none";
+      document.getElementById("reason-options").style.display = "block";
+    }
+
+    function toggleMiddleInput() {
+      const checked = document.getElementById("customMiddleCheck").checked;
+      document.getElementById("customMiddleInput").style.display = checked ? "inline-block" : "none";
+      document.getElementById("middleCategory").style.display = checked ? "none" : "inline-block";
+    }
+
     function startTimer() {
       startTime = new Date();
       totalLogs = stopCount = findCount = 0;
@@ -183,66 +241,6 @@
           });
         });
     }
-
-
-  function submitData(result, subResult = "", reason = "") {
-    const gu = document.getElementById("mainCategory").value;
-    const station = document.getElementById("customMiddleCheck").checked
-      ? document.getElementById("customMiddleInput").value
-      : document.getElementById("middleCategory").value;
-    const detail = document.getElementById("subCategory").value;
-    const age = document.getElementById("age")?.value || "";
-
-    const params = new URLSearchParams({
-      team: selectedTeam,
-      main: gu,
-      middle: station,
-      sub: detail,
-      result: result,
-      sub_result: subResult,
-      age: age,
-      reason: reason
-    });
-
-    fetch(GAS_URL + "?" + params.toString())
-      .then(res => res.text())
-      .then(data => {
-        alert("전송 완료!");
-        totalLogs++;
-        if (result === "O") {
-          stopCount++;
-          if (subResult === "찾기") findCount++;
-        }
-        document.getElementById("sub-options").style.display = "none";
-        document.getElementById("age-input").style.display = "none";
-        document.getElementById("reason-options").style.display = "none";
-        document.getElementById("age").value = "";
-      })
-      .catch(err => alert("전송 실패: " + err));
-  }
-
-  function selectResult(res) {
-    if (res === "O") {
-      document.getElementById("sub-options").style.display = "block";
-    }
-  }
-
-  function showAgeInput() {
-    document.getElementById("age-input").style.display = "block";
-    document.getElementById("reason-options").style.display = "none";
-  }
-
-  function showReasonOptions() {
-    document.getElementById("age-input").style.display = "none";
-    document.getElementById("reason-options").style.display = "block";
-  }
-
-  function toggleMiddleInput() {
-    const checked = document.getElementById("customMiddleCheck").checked;
-    document.getElementById("customMiddleInput").style.display = checked ? "inline-block" : "none";
-    document.getElementById("middleCategory").style.display = checked ? "none" : "inline-block";
-  }
-
   </script>
 </body>
 </html>
