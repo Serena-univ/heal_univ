@@ -21,13 +21,17 @@
       font-size: 16px;
       color: #333;
     }
+    #startButton.active {
+      background-color: #2196F3;
+      color: #fff;
+    }
   </style>
 </head>
 <body>
   <h2>📍 서야 대학가 소성</h2>
 
   <div class="section">
-    <button onclick="startTimer()">▶️ 시작</button>
+    <button id="startButton" onclick="startTimer()">▶️ 시작</button>
     <button onclick="endTimer()">⏹ 종료</button>
     <div id="timerDisplay">⏱ 소요 시간: 0시간 0분</div>
   </div>
@@ -110,6 +114,11 @@
       const detail = document.getElementById("subCategory").value;
       const age = document.getElementById("age")?.value || "";
 
+      if (!gu || !station || !detail) {
+        alert("구, 역, 상세위치를 모두 입력해주세요.");
+        return;
+      }
+
       const params = new URLSearchParams({
         team: selectedTeam,
         main: gu,
@@ -136,6 +145,9 @@
           document.getElementById("age").value = "";
         })
         .catch(err => alert("전송 실패: " + err));
+
+      // 상세위치 직접입력 저장 요청
+      fetch(GAS_URL + `?action=saveDetail&gu=${encodeURIComponent(gu)}&station=${encodeURIComponent(station)}&detail=${encodeURIComponent(detail)}`);
     }
 
     function selectResult(res) {
@@ -164,6 +176,7 @@
       startTime = new Date();
       totalLogs = stopCount = findCount = 0;
       clearInterval(timerInterval);
+      document.getElementById("startButton").classList.add("active");
       timerInterval = setInterval(() => {
         const now = new Date();
         const elapsedMs = now - startTime;
