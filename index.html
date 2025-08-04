@@ -5,25 +5,54 @@
   <title>서야 대학가 소성</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Apple SD Gothic Neo', sans-serif;
+      margin: 0;
       padding: 20px;
+      background-color: #f9f9f9;
+      color: #333;
     }
-    button, select, input[type="text"], input[type="number"] {
-      margin: 8px 0;
-      padding: 10px 14px;
-      font-size: 16px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .active-team {
-      background-color: #4caf50 !important;
-      color: white !important;
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 24px;
     }
     .section {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
       margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
-    #sub-options, #reason-options, #age-input, #customMiddleInput, #dataSection {
-      display: none;
+    button, select, input[type="text"], input[type="number"], textarea {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 16px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .button-group button {
+      width: 48%;
+      margin: 4px 1%;
+    }
+    .active-team {
+      background-color: #27ae60 !important;
+    }
+    label {
+      font-weight: 600;
+      margin-top: 10px;
+      display: block;
     }
     #reportPopup {
       display: none;
@@ -38,74 +67,59 @@
       z-index: 999;
       width: 90%;
       max-width: 350px;
-    }
-    #reportContent {
-      white-space: pre-wrap;
-      margin-bottom: 10px;
+      border-radius: 10px;
     }
     #timerDisplay {
       font-weight: bold;
       font-size: 20px;
-      color: #333;
-    }
-    #startButton.active {
-      background-color: #2196F3;
-      color: #fff;
+      color: #e67e22;
+      text-align: center;
+      margin-bottom: 10px;
     }
     #liveReport {
+      font-size: 15px;
+      color: #555;
       margin-top: 10px;
-      font-size: 16px;
-      color: #444;
-    }
-    label {
-      display: block;
-      margin-top: 8px;
-      font-weight: bold;
-    }
-    textarea {
-      width: 100%;
-      font-size: 16px;
-      min-height: 80px;
-      margin-top: 5px;
     }
     @media (max-width: 480px) {
-      button, select, input[type="text"], input[type="number"] {
-        font-size: 18px;
-        padding: 12px;
+      button, select, input[type="text"], input[type="number"], textarea {
+        font-size: 17px;
+        padding: 14px;
       }
-      #timerDisplay {
-        font-size: 18px;
+      .button-group button {
+        width: 100%;
+        margin: 6px 0;
       }
     }
   </style>
   <script src="main.js"></script>
 </head>
 <body>
+
   <h2>📍 서야 대학가 소성</h2>
 
   <div class="section" id="initialSection">
-    <button onclick="selectTeam(1)" id="team1">1팀</button>
-    <button onclick="selectTeam(2)" id="team2">2팀</button>
-    <button onclick="selectTeam(3)" id="team3">3팀</button>
-    <button onclick="selectTeam(4)" id="team4">4팀</button>
-    <br>
+    <div class="button-group">
+      <button onclick="selectTeam(1)" id="team1">1팀</button>
+      <button onclick="selectTeam(2)" id="team2">2팀</button>
+      <button onclick="selectTeam(3)" id="team3">3팀</button>
+      <button onclick="selectTeam(4)" id="team4">4팀</button>
+    </div>
     <input type="text" id="participantInput" placeholder="활동자 이름 입력">
-    <br>
     <button id="startButton" onclick="startTimer()">▶️ 시작</button>
   </div>
 
   <div class="section" id="liveStats" style="display:none;">
     <div id="timerDisplay">⏱ 소요 시간: 0시간 0분</div>
     <div id="liveReport">
-      <span id="startTimeText">시작시간: - </span>
-      <button onclick="endTimer()">⏹ 종료</button>
-      <br>
+      <span id="startTimeText">시작시간: - </span><br>
       활동자: <span id="participantName"></span><br>
       말걸기: <span id="liveTalk">0</span>, 스탑: <span id="liveStop">0</span>, 찾기: <span id="liveFind">0</span>
+      <button onclick="endTimer()" style="margin-top: 10px;">⏹ 종료</button>
     </div>
   </div>
 
-  <div id="dataSection" style="display:none;">
+  <div class="section" id="dataSection" style="display:none;">
     <select id="mainCategory" onchange="updateLocation()">
       <option value="">구 선택</option>
       <option value="노원구">노원구</option>
@@ -123,15 +137,12 @@
       <option value="">역 선택</option>
     </select>
 
-    <label>
-      <input type="checkbox" id="customMiddleCheck" onchange="toggleMiddleInput()"> 직접 입력
-    </label>
+    <label><input type="checkbox" id="customMiddleCheck" onchange="toggleMiddleInput()"> 직접 입력</label>
     <input type="text" id="customMiddleInput" placeholder="역 직접 입력">
-
     <input type="text" id="subCategory" list="detailList" placeholder="상세위치 (입력 or 선택)">
     <datalist id="detailList"></datalist>
 
-    <div>
+    <div class="button-group">
       <button onclick="selectResult('O')">⭕</button>
       <button onclick="submitData('X')">❌</button>
     </div>
@@ -142,7 +153,8 @@
     </div>
 
     <div id="age-input">
-      <label>나이: <input type="number" id="age" min="0" max="120"></label>
+      <label>나이</label>
+      <input type="number" id="age" min="0" max="120">
       <button onclick="submitData('O', '찾기')">전송</button>
     </div>
 
@@ -157,14 +169,10 @@
 
   <div id="reportPopup">
     <div id="reportContent"></div>
-    <label>
-      ▫️활동 피드백:<br>
-      <textarea id="feedbackText" rows="3" style="width: 100%;"></textarea>
-    </label>
-    <br>
+    <label>▫️활동 피드백</label>
+    <textarea id="feedbackText" rows="3"></textarea>
     <button onclick="copyReport()">📋 복사</button>
     <button onclick="closePopup()">닫기</button>
   </div>
 </body>
->
 </html>
