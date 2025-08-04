@@ -281,6 +281,18 @@
                 console.error("상세위치 저장 실패", err);
             });
     }
+    function toggleMiddleInput() {
+      const isChecked = document.getElementById("customMiddleCheck").checked;
+      const customInput = document.getElementById("customMiddleInput");
+      const middleSelect = document.getElementById("middleCategory");
+
+      customInput.style.display = isChecked ? "inline-block" : "none";
+      middleSelect.disabled = isChecked;
+    }
+
+    function selectResult(result) {
+      document.getElementById("sub-options").style.display = result === "O" ? "block" : "none";
+    }
 
     function copyReport() {
       const content = document.getElementById("reportContent").innerText;
