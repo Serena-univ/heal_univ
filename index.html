@@ -4,65 +4,66 @@
   <meta charset="UTF-8">
   <title>서야 대학가 소성</title>
   <style>
+    :root {
+      --blue: #005bcb;
+      --blue-dark: #003f9e;
+      --text-color: #002244;
+    }
+    * {
+      box-sizing: border-box;
+    }
     body {
       font-family: 'Apple SD Gothic Neo', sans-serif;
       margin: 0;
-      padding: 20px;
+      padding: 16px;
       background-color: #ffffff;
-      color: #003366;
-      font-size: 20px;
+      color: var(--text-color);
+      font-size: 22px;
     }
     h2 {
       text-align: center;
-      color: #005bcb;
-      font-size: 28px;
-      margin-bottom: 28px;
+      color: var(--blue);
+      font-size: 32px;
+      margin-bottom: 24px;
     }
     .section {
-      background: #ffffff;
-      border: 2px solid #005bcb;
-      border-radius: 14px;
+      background: #fff;
+      border: 2px solid var(--blue);
+      border-radius: 16px;
       padding: 20px;
-      margin-bottom: 24px;
-      box-shadow: 0 4px 12px rgba(0, 91, 203, 0.1);
+      margin-bottom: 28px;
+      box-shadow: 0 4px 12px rgba(0, 91, 203, 0.15);
     }
     button, select, input[type="text"], input[type="number"], textarea {
       width: 100%;
-      padding: 16px 20px;
-      font-size: 20px;
-      margin: 10px 0;
-      border: 2px solid #005bcb;
-      border-radius: 10px;
+      padding: 18px;
+      font-size: 22px;
+      margin: 12px 0;
+      border: 2px solid var(--blue);
+      border-radius: 12px;
       background-color: #ffffff;
-      color: #003366;
-      box-sizing: border-box;
+      color: var(--text-color);
     }
     button {
-      background-color: #005bcb;
-      color: #ffffff;
-      border: none;
+      background-color: var(--blue);
+      color: white;
       font-weight: bold;
       cursor: pointer;
       transition: background 0.2s;
     }
     button:hover {
-      background-color: #003f9e;
+      background-color: var(--blue-dark);
     }
     .button-group {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 12px;
     }
     .button-group button {
       flex: 1 1 48%;
     }
     .active-team {
-      background-color: #003f9e !important;
-    }
-    label {
-      font-weight: bold;
-      display: block;
-      margin-top: 12px;
+      background-color: var(--blue-dark) !important;
     }
     #reportPopup {
       display: none;
@@ -71,7 +72,7 @@
       left: 50%;
       transform: translate(-50%, -20%);
       background: #ffffff;
-      border: 2px solid #005bcb;
+      border: 2px solid var(--blue);
       padding: 24px;
       box-shadow: 0 0 12px rgba(0, 91, 203, 0.3);
       z-index: 999;
@@ -79,63 +80,58 @@
       max-width: 400px;
       border-radius: 12px;
     }
-    #timerDisplay {
-      font-weight: bold;
-      font-size: 24px;
-      color: #005bcb;
-      text-align: center;
-      margin-bottom: 14px;
-    }
-    #liveReport {
-      font-size: 18px;
-      color: #004080;
-      margin-top: 12px;
-    }
-    textarea {
-      resize: vertical;
-      min-height: 100px;
+    #sub-options, #reason-options, #age-input, #customMiddleInput, #dataSection {
+      display: none;
     }
     @media (max-width: 480px) {
       body {
-        font-size: 21px;
+        font-size: 24px;
       }
       h2 {
-        font-size: 26px;
+        font-size: 30px;
       }
       button, select, input, textarea {
-        font-size: 21px;
-        padding: 18px;
+        font-size: 24px;
+        padding: 20px;
       }
     }
   </style>
-  <script src="main.js"></script>
+  <script>
+    function selectResult(result) {
+      if (result === 'O') {
+        document.getElementById('sub-options').style.display = 'block';
+        document.getElementById('age-input').style.display = 'none';
+        document.getElementById('reason-options').style.display = 'none';
+      } else {
+        submitData('X');
+      }
+    }
+
+    function showAgeInput() {
+      document.getElementById('age-input').style.display = 'block';
+      document.getElementById('reason-options').style.display = 'none';
+    }
+
+    function showReasonOptions() {
+      document.getElementById('reason-options').style.display = 'block';
+      document.getElementById('age-input').style.display = 'none';
+    }
+
+    function submitData(mainResult, subResult = '', reason = '') {
+      // 실제 데이터 전송 처리 코드
+      alert(`전송됨: ${mainResult}, ${subResult}, ${reason}`);
+      // UI 초기화
+      document.getElementById('sub-options').style.display = 'none';
+      document.getElementById('reason-options').style.display = 'none';
+      document.getElementById('age-input').style.display = 'none';
+    }
+  </script>
 </head>
 <body>
 
   <h2>📍 서야 대학가 소성</h2>
 
-  <div class="section" id="initialSection">
-    <div class="button-group">
-      <button onclick="selectTeam(1)" id="team1">1팀</button>
-      <button onclick="selectTeam(2)" id="team2">2팀</button>
-      <button onclick="selectTeam(3)" id="team3">3팀</button>
-      <button onclick="selectTeam(4)" id="team4">4팀</button>
-    </div>
-    <input type="text" id="participantInput" placeholder="활동자 이름 입력">
-    <button id="startButton" onclick="startTimer()">▶️ 시작</button>
-  </div>
-
-  <div class="section" id="liveStats" style="display:none;">
-    <div id="timerDisplay">⏱ 소요 시간: 0시간 0분</div>
-    <div id="liveReport">
-      <span id="startTimeText">시작시간: - </span><br>
-      활동자: <span id="participantName"></span><br>
-      말걸기: <span id="liveTalk">0</span>, 스탑: <span id="liveStop">0</span>, 찾기: <span id="liveFind">0</span>
-      <button onclick="endTimer()" style="margin-top: 12px;">⏹ 종료</button>
-    </div>
-  </div>
-
-  <div class="section" id="dataSection" style="display:none;">
+  <div class="section" id="dataSection">
     <select id="mainCategory" onchange="updateLocation()">
       <option value="">구 선택</option>
       <option value="노원구">노원구</option>
@@ -169,7 +165,7 @@
     </div>
 
     <div id="age-input">
-      <label>나이</label>
+      <label>나이 입력</label>
       <input type="number" id="age" min="0" max="120">
       <button onclick="submitData('O', '찾기')">전송</button>
     </div>
@@ -183,12 +179,5 @@
     </div>
   </div>
 
-  <div id="reportPopup">
-    <div id="reportContent"></div>
-    <label>▫️활동 피드백</label>
-    <textarea id="feedbackText" rows="3"></textarea>
-    <button onclick="copyReport()">📋 복사</button>
-    <button onclick="closePopup()">닫기</button>
-  </div>
 </body>
 </html>
