@@ -156,14 +156,35 @@
     }
 
     function endTimer() {
-      clearInterval(timerInterval);
-      const endTime = new Date();
-      const durationMin = Math.floor((endTime - startTime) / 60000);
-      const startText = startTime.toLocaleTimeString();
-      const endText = endTime.toLocaleTimeString();
-      const summary = `${startText}~${endText}, ${Math.floor(durationMin/60)}시간 ${durationMin%60}분\n▫️활동자 : ${participant}\n▫️말걸기 : ${totalLogs}\n▫️스탑 : ${stopCount}\n▫️찾기 : ${findCount}`;
-      document.getElementById("reportContent").innerText = summary;
-      document.getElementById("reportPopup").style.display = "block";
+        clearInterval(timerInterval);
+        const endTime = new Date();
+        const durationMin = Math.floor((endTime - startTime) / 60000);
+        const startText = startTime.toLocaleTimeString();
+        const endText = endTime.toLocaleTimeString();
+
+        const today = new Date();
+        const dateText = `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일`;
+
+        const gu = document.getElementById("mainCategory").value.trim();
+        const isCustom = document.getElementById("customMiddleCheck").checked;
+        const station = (isCustom
+            ? document.getElementById("customMiddleInput").value
+            : document.getElementById("middleCategory").value
+        ).trim();
+        const detail = document.getElementById("subCategory").value.trim();
+
+        const locationText = station ? `${station}역 ${detail}` : "";
+
+        const summary = `${dateText}
+    ${startText}~${endText}, ${Math.floor(durationMin / 60)}시간 ${durationMin % 60}분
+    ${locationText}
+    ▫️활동자 : ${participant}
+    ▫️말걸기 : ${totalLogs}
+    ▫️스탑 : ${stopCount}
+    ▫️찾기 : ${findCount}`;
+
+        document.getElementById("reportContent").innerText = summary;
+        document.getElementById("reportPopup").style.display = "block";
     }
 
     function updateLocation() {
