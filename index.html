@@ -37,7 +37,7 @@
     <button id="startButton" onclick="startTimer()" style="font-size: 18px; padding: 10px 20px">▶️ 시작</button>
   </div>
 
-  <div class="section" id="liveStats">
+  <div class="section" id="liveStats" style="display:none;">
     <div id="timerDisplay">⏱ 소요 시간: 0시간 0분</div>
     <div id="liveReport">
       <span id="startTimeText">시작시간: - </span>
@@ -147,6 +147,12 @@
         const hours = Math.floor(elapsedMs / (1000 * 60 * 60));
         document.getElementById('timerDisplay').innerText = `⏱ 소요 시간: ${hours}시간 ${minutes}분`;
       }, 1000);
+    }
+
+    function updateLiveReport() {
+      document.getElementById("liveTalk").innerText = totalLogs;
+      document.getElementById("liveStop").innerText = stopCount;
+      document.getElementById("liveFind").innerText = findCount;
     }
 
     function endTimer() {
