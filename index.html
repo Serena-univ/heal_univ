@@ -81,6 +81,90 @@
   <script src="main.js"></script>
 </head>
 <body>
-  <!-- 기존 HTML은 유지되며, main.js에서 모든 기능 로직 (버튼 동작, fetch, 제출 등)을 처리합니다 -->
+  <h2>📍 서야 대학가 소성</h2>
+
+  <div class="section" id="initialSection">
+    <button onclick="selectTeam(1)" id="team1">1팀</button>
+    <button onclick="selectTeam(2)" id="team2">2팀</button>
+    <button onclick="selectTeam(3)" id="team3">3팀</button>
+    <button onclick="selectTeam(4)" id="team4">4팀</button>
+    <br>
+    <input type="text" id="participantInput" placeholder="활동자 이름 입력">
+    <br>
+    <button id="startButton" onclick="startTimer()">▶️ 시작</button>
+  </div>
+
+  <div class="section" id="liveStats" style="display:none;">
+    <div id="timerDisplay">⏱ 소요 시간: 0시간 0분</div>
+    <div id="liveReport">
+      <span id="startTimeText">시작시간: - </span>
+      <button onclick="endTimer()">⏹ 종료</button>
+      <br>
+      활동자: <span id="participantName"></span><br>
+      말걸기: <span id="liveTalk">0</span>, 스탑: <span id="liveStop">0</span>, 찾기: <span id="liveFind">0</span>
+    </div>
+  </div>
+
+  <div id="dataSection" style="display:none;">
+    <select id="mainCategory" onchange="updateLocation()">
+      <option value="">구 선택</option>
+      <option value="노원구">노원구</option>
+      <option value="도봉구">도봉구</option>
+      <option value="성북구">성북구</option>
+      <option value="강북구">강북구</option>
+      <option value="중랑구">중랑구</option>
+      <option value="광진구">광진구</option>
+      <option value="동대문구">동대문구</option>
+      <option value="종로구">종로구</option>
+      <option value="성동구">성동구</option>
+    </select>
+
+    <select id="middleCategory" onchange="loadDetailList()">
+      <option value="">역 선택</option>
+    </select>
+
+    <label>
+      <input type="checkbox" id="customMiddleCheck" onchange="toggleMiddleInput()"> 직접 입력
+    </label>
+    <input type="text" id="customMiddleInput" placeholder="역 직접 입력">
+
+    <input type="text" id="subCategory" list="detailList" placeholder="상세위치 (입력 or 선택)">
+    <datalist id="detailList"></datalist>
+
+    <div>
+      <button onclick="selectResult('O')">⭕</button>
+      <button onclick="submitData('X')">❌</button>
+    </div>
+
+    <div id="sub-options">
+      <button onclick="showAgeInput()">찾기</button>
+      <button onclick="showReasonOptions()">비합</button>
+    </div>
+
+    <div id="age-input">
+      <label>나이: <input type="number" id="age" min="0" max="120"></label>
+      <button onclick="submitData('O', '찾기')">전송</button>
+    </div>
+
+    <div id="reason-options">
+      <button onclick="submitData('O', '비합', '미성년자')">미성년자</button>
+      <button onclick="submitData('O', '비합', '27세 이상')">27세 이상</button>
+      <button onclick="submitData('O', '비합', '거리')">거리</button>
+      <button onclick="submitData('O', '비합', '환경')">환경</button>
+      <button onclick="submitData('O', '비합', '인성')">인성</button>
+    </div>
+  </div>
+
+  <div id="reportPopup">
+    <div id="reportContent"></div>
+    <label>
+      ▫️활동 피드백:<br>
+      <textarea id="feedbackText" rows="3" style="width: 100%;"></textarea>
+    </label>
+    <br>
+    <button onclick="copyReport()">📋 복사</button>
+    <button onclick="closePopup()">닫기</button>
+  </div>
 </body>
+>
 </html>
