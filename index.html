@@ -80,8 +80,13 @@
       max-width: 400px;
       border-radius: 12px;
     }
-    #sub-options, #reason-options, #age-input, #customMiddleInput, #dataSection {
+    #sub-options, #reason-options, #age-input, #customMiddleInput {
       display: none;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 12px;
     }
     @media (max-width: 480px) {
       body {
@@ -96,36 +101,6 @@
       }
     }
   </style>
-  <script>
-    function selectResult(result) {
-      if (result === 'O') {
-        document.getElementById('sub-options').style.display = 'block';
-        document.getElementById('age-input').style.display = 'none';
-        document.getElementById('reason-options').style.display = 'none';
-      } else {
-        submitData('X');
-      }
-    }
-
-    function showAgeInput() {
-      document.getElementById('age-input').style.display = 'block';
-      document.getElementById('reason-options').style.display = 'none';
-    }
-
-    function showReasonOptions() {
-      document.getElementById('reason-options').style.display = 'block';
-      document.getElementById('age-input').style.display = 'none';
-    }
-
-    function submitData(mainResult, subResult = '', reason = '') {
-      // 실제 데이터 전송 처리 코드
-      alert(`전송됨: ${mainResult}, ${subResult}, ${reason}`);
-      // UI 초기화
-      document.getElementById('sub-options').style.display = 'none';
-      document.getElementById('reason-options').style.display = 'none';
-      document.getElementById('age-input').style.display = 'none';
-    }
-  </script>
 </head>
 <body>
 
@@ -178,6 +153,48 @@
       <button onclick="submitData('O', '비합', '인성')">인성</button>
     </div>
   </div>
+
+  <script>
+    function selectResult(result) {
+      if (result === 'O') {
+        document.getElementById('sub-options').style.display = 'block';
+        document.getElementById('age-input').style.display = 'none';
+        document.getElementById('reason-options').style.display = 'none';
+      } else {
+        submitData('X');
+      }
+    }
+
+    function showAgeInput() {
+      document.getElementById('age-input').style.display = 'block';
+      document.getElementById('reason-options').style.display = 'none';
+    }
+
+    function showReasonOptions() {
+      document.getElementById('reason-options').style.display = 'block';
+      document.getElementById('age-input').style.display = 'none';
+    }
+
+    function toggleMiddleInput() {
+      const check = document.getElementById('customMiddleCheck').checked;
+      document.getElementById('customMiddleInput').style.display = check ? 'block' : 'none';
+    }
+
+    function updateLocation() {
+      // 이 함수는 추후 시트에서 역 목록 불러오기에 사용
+    }
+
+    function loadDetailList() {
+      // 이 함수는 추후 상세위치 datalist 불러오기에 사용
+    }
+
+    function submitData(mainResult, subResult = '', reason = '') {
+      alert(`전송됨: ${mainResult}, ${subResult}, ${reason}`);
+      document.getElementById('sub-options').style.display = 'none';
+      document.getElementById('age-input').style.display = 'none';
+      document.getElementById('reason-options').style.display = 'none';
+    }
+  </script>
 
 </body>
 </html>
