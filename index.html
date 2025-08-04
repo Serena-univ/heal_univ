@@ -10,37 +10,23 @@
     }
     .active-team { background-color: #4caf50 !important; color: white !important; }
     .section { margin-bottom: 20px; }
-    #sub-options, #reason-options, #age-input { display: none; }
-    #customMiddleInput { display: none; }
+    #sub-options, #reason-options, #age-input, #customMiddleInput, #dataSection { display: none; }
     #reportPopup {
       display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, -20%);
-      background: #fff; border: 1px solid #ccc; padding: 20px; box-shadow: 0 0 10px #aaa; z-index: 999;
-      width: 300px;
+      background: #fff; border: 1px solid #ccc; padding: 20px; box-shadow: 0 0 10px #aaa; z-index: 999; width: 300px;
     }
     #reportContent {
-      white-space: pre-wrap;
-      margin-bottom: 10px;
+      white-space: pre-wrap; margin-bottom: 10px;
     }
-    #timerDisplay {
-      font-weight: bold;
-      font-size: 20px;
-      color: #333;
-    }
-    #startButton.active {
-      background-color: #2196F3;
-      color: #fff;
-    }
-    #liveReport {
-      margin-top: 10px;
-      font-size: 14px;
-      color: #444;
-    }
+    #timerDisplay { font-weight: bold; font-size: 20px; color: #333; }
+    #startButton.active { background-color: #2196F3; color: #fff; }
+    #liveReport { margin-top: 10px; font-size: 14px; color: #444; }
   </style>
 </head>
 <body>
   <h2>📍 서야 대학가 소성</h2>
 
-  <div class="section">
+  <div class="section" id="initialSection">
     <button onclick="selectTeam(1)" id="team1">1팀</button>
     <button onclick="selectTeam(2)" id="team2">2팀</button>
     <button onclick="selectTeam(3)" id="team3">3팀</button>
@@ -51,7 +37,7 @@
     <button id="startButton" onclick="startTimer()" style="font-size: 18px; padding: 10px 20px">▶️ 시작</button>
   </div>
 
-  <div class="section" id="liveStats" style="display:none;">
+  <div class="section" id="liveStats">
     <div id="timerDisplay">⏱ 소요 시간: 0시간 0분</div>
     <div id="liveReport">
       <span id="startTimeText">시작시간: - </span>
@@ -59,6 +45,57 @@
       <br>
       활동자: <span id="participantName"></span><br>
       말걸기: <span id="liveTalk">0</span>, 스탑: <span id="liveStop">0</span>, 찾기: <span id="liveFind">0</span>
+    </div>
+  </div>
+
+  <div id="dataSection">
+    <div class="section">
+      <strong>장소 선택:</strong><br>
+      <select id="mainCategory" onchange="updateLocation()">
+        <option value="">구 선택</option>
+        <option value="노원구">노원구</option>
+        <option value="도봉구">도봉구</option>
+        <option value="성북구">성북구</option>
+        <option value="강북구">강북구</option>
+        <option value="중랑구">중랑구</option>
+        <option value="광진구">광진구</option>
+        <option value="동대문구">동대문구</option>
+        <option value="종로구">종로구</option>
+        <option value="성동구">성동구</option>
+      </select>
+      <select id="middleCategory" onchange="loadDetailList()">
+        <option value="">역 선택</option>
+      </select>
+      <label><input type="checkbox" id="customMiddleCheck" onchange="toggleMiddleInput()"> 직접 입력</label>
+      <input type="text" id="customMiddleInput" placeholder="역 직접 입력">
+      <input type="text" id="subCategory" list="detailList" placeholder="상세위치 (입력 or 선택)">
+      <datalist id="detailList"></datalist>
+    </div>
+
+    <div class="section">
+      <strong>결과 선택:</strong><br>
+      <button onclick="selectResult('O')">⭕</button>
+      <button onclick="submitData('X')">❌</button>
+    </div>
+
+    <div id="sub-options">
+      <strong>O 선택 → 하위 선택:</strong><br>
+      <button onclick="showAgeInput()">찾기</button>
+      <button onclick="showReasonOptions()">비합</button>
+    </div>
+
+    <div id="age-input">
+      <label>나이: <input type="number" id="age" min="0" max="120"></label>
+      <button onclick="submitData('O', '찾기')">전송</button>
+    </div>
+
+    <div id="reason-options">
+      <strong>비합 사유 선택:</strong><br>
+      <button onclick="submitData('O', '비합', '미성년자')">미성년자</button>
+      <button onclick="submitData('O', '비합', '27세 이상')">27세 이상</button>
+      <button onclick="submitData('O', '비합', '거리')">거리</button>
+      <button onclick="submitData('O', '비합', '환경')">환경</button>
+      <button onclick="submitData('O', '비합', '인성')">인성</button>
     </div>
   </div>
 
@@ -78,53 +115,12 @@
     let totalLogs = 0, stopCount = 0, findCount = 0;
     let participant = "";
 
-    function submitData(result, subResult = "", reason = "") {
-      const gu = document.getElementById("mainCategory").value;
-      const station = document.getElementById("customMiddleCheck").checked
-        ? document.getElementById("customMiddleInput").value
-        : document.getElementById("middleCategory").value;
-      const detail = document.getElementById("subCategory").value;
-      const age = document.getElementById("age")?.value || "";
-
-      if (!gu || !station || !detail) {
-        alert("구, 역, 상세위치를 모두 입력해주세요.");
-        return;
+    function selectTeam(team) {
+      selectedTeam = team;
+      for (let i = 1; i <= 4; i++) {
+        document.getElementById(`team${i}`).classList.remove('active-team');
       }
-
-      const params = new URLSearchParams({
-        team: selectedTeam,
-        main: gu,
-        middle: station,
-        sub: detail,
-        result: result,
-        sub_result: subResult,
-        age: age,
-        reason: reason
-      });
-
-      fetch(GAS_URL + "?" + params.toString())
-        .then(res => res.text())
-        .then(data => {
-          totalLogs++;
-          if (result === "O") {
-            stopCount++;
-            if (subResult === "찾기") findCount++;
-          }
-          updateLiveReport();
-          document.getElementById("sub-options").style.display = "none";
-          document.getElementById("age-input").style.display = "none";
-          document.getElementById("reason-options").style.display = "none";
-          document.getElementById("age").value = "";
-        })
-        .catch(err => alert("전송 실패: " + err));
-
-      fetch(GAS_URL + `?action=saveDetail&gu=${encodeURIComponent(gu)}&station=${encodeURIComponent(station)}&detail=${encodeURIComponent(detail)}`);
-    }
-
-    function updateLiveReport() {
-      document.getElementById("liveTalk").innerText = totalLogs;
-      document.getElementById("liveStop").innerText = stopCount;
-      document.getElementById("liveFind").innerText = findCount;
+      document.getElementById(`team${team}`).classList.add('active-team');
     }
 
     function startTimer() {
@@ -138,6 +134,8 @@
       clearInterval(timerInterval);
       document.getElementById("startButton").classList.add("active");
       document.getElementById("liveStats").style.display = "block";
+      document.getElementById("dataSection").style.display = "block";
+      document.getElementById("initialSection").style.display = "none";
       document.getElementById("participantName").innerText = participant;
       document.getElementById("startTimeText").innerText = `시작시간: ${startTime.toLocaleTimeString()}`;
       updateLiveReport();
