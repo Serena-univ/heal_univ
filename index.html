@@ -185,29 +185,30 @@
         });
     }
 
-    function loadDetailList() {
-      const gu = document.getElementById("mainCategory").value;
-      const station = document.getElementById("middleCategory").value;
+    function loadDetailList() {
+      const gu = document.getElementById("mainCategory").value;
+      const station = document.getElementById("middleCategory").value;
 
-      if (!gu || !station) return;
+      if (!gu || !station) return;
 
-      fetch(`${GAS_URL}?action=getDetailList&gu=${gu}&station=${encodeURIComponent(station)}`)
-        .then(res => res.json())
-        .then(detailList => {
-          const dataList = document.getElementById("detailList");
-          dataList.innerHTML = "";
+      fetch(`${GAS_URL}?action=getDetailList&gu=${gu}&station=${encodeURIComponent(station)}`)
+        .then(res => res.json())
+        .then(detailList => {
+          const dataList = document.getElementById("detailList");
+          dataList.innerHTML = "";
 
-          const uniqueDetails = [...new Set(detailList.map(d => d.trim()).filter(Boolean))];
-          uniqueDetails.forEach(detail => {
-            const option = document.createElement("option");
-            option.value = detail;
-            dataList.appendChild(option);
-          });
-        })
-        .catch(error => {
-          console.error("상세위치 불러오기 실패", error);
-        });
-    }
+          const uniqueDetails = [...new Set(detailList.map(d => d.trim()).filter(Boolean))];
+          uniqueDetails.forEach(detail => {
+            const option = document.createElement("option");
+            option.value = detail;
+            dataList.appendChild(option);
+          });
+        })
+        .catch(error => {
+          console.error("상세위치 불러오기 실패", error);
+        });
+    }
+
 
     function submitData(result, subResult = "", reason = "") {
         const gu = document.getElementById("mainCategory").value;
