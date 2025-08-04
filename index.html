@@ -3,198 +3,201 @@
 <head>
   <meta charset="UTF-8">
   <title>서야 대학가 소성</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     :root {
       --blue: #005bcb;
       --blue-dark: #003f9e;
-      --text-color: #002244;
+      --text: #002244;
     }
+
     * {
       box-sizing: border-box;
     }
+
     body {
       font-family: 'Apple SD Gothic Neo', sans-serif;
       margin: 0;
-      padding: 16px;
-      background-color: #ffffff;
-      color: var(--text-color);
-      font-size: 22px;
+      padding: 5vw;
+      background: #ffffff;
+      color: var(--text);
+      font-size: 6vw; /* 기본 글씨 엄청 크게 */
     }
+
     h2 {
+      font-size: 8vw;
       text-align: center;
       color: var(--blue);
-      font-size: 32px;
-      margin-bottom: 24px;
+      margin-bottom: 6vw;
     }
+
     .section {
       background: #fff;
-      border: 2px solid var(--blue);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 28px;
-      box-shadow: 0 4px 12px rgba(0, 91, 203, 0.15);
+      border: 0.5vw solid var(--blue);
+      border-radius: 3vw;
+      padding: 5vw;
+      margin-bottom: 6vw;
+      box-shadow: 0 0 2vw rgba(0, 91, 203, 0.2);
     }
+
     button, select, input[type="text"], input[type="number"], textarea {
       width: 100%;
-      padding: 18px;
-      font-size: 22px;
-      margin: 12px 0;
-      border: 2px solid var(--blue);
-      border-radius: 12px;
-      background-color: #ffffff;
-      color: var(--text-color);
+      padding: 4vw;
+      font-size: 6vw;
+      margin: 3vw 0;
+      border: 0.5vw solid var(--blue);
+      border-radius: 2vw;
+      background-color: #fff;
+      color: var(--text);
     }
+
     button {
       background-color: var(--blue);
-      color: white;
+      color: #fff;
       font-weight: bold;
       cursor: pointer;
-      transition: background 0.2s;
     }
+
     button:hover {
       background-color: var(--blue-dark);
     }
+
     .button-group {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 3vw;
     }
+
     .button-group button {
       flex: 1 1 48%;
     }
+
     .active-team {
       background-color: var(--blue-dark) !important;
     }
-    #reportPopup {
-      display: none;
-      position: fixed;
-      top: 20%;
-      left: 50%;
-      transform: translate(-50%, -20%);
-      background: #ffffff;
-      border: 2px solid var(--blue);
-      padding: 24px;
-      box-shadow: 0 0 12px rgba(0, 91, 203, 0.3);
-      z-index: 999;
-      width: 90%;
-      max-width: 400px;
-      border-radius: 12px;
-    }
-    #sub-options, #reason-options, #age-input, #customMiddleInput {
-      display: none;
-    }
+
     label {
       display: block;
       font-weight: bold;
-      margin-top: 12px;
+      margin-top: 3vw;
     }
-    @media (max-width: 480px) {
-      body {
-        font-size: 24px;
-      }
-      h2 {
-        font-size: 30px;
-      }
-      button, select, input, textarea {
-        font-size: 24px;
-        padding: 20px;
-      }
+
+    #sub-options,
+    #reason-options,
+    #age-input,
+    #customMiddleInput {
+      display: none;
+    }
+
+    #reportPopup {
+      display: none;
+      position: fixed;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      background: white;
+      border: 0.5vw solid var(--blue);
+      border-radius: 3vw;
+      padding: 5vw;
+      box-shadow: 0 0 2vw rgba(0, 0, 0, 0.2);
+      z-index: 999;
     }
   </style>
 </head>
 <body>
 
-  <h2>📍 서야 대학가 소성</h2>
+<h2>📍 서야 대학가 소성</h2>
 
-  <div class="section" id="dataSection">
-    <select id="mainCategory" onchange="updateLocation()">
-      <option value="">구 선택</option>
-      <option value="노원구">노원구</option>
-      <option value="도봉구">도봉구</option>
-      <option value="성북구">성북구</option>
-      <option value="강북구">강북구</option>
-      <option value="중랑구">중랑구</option>
-      <option value="광진구">광진구</option>
-      <option value="동대문구">동대문구</option>
-      <option value="종로구">종로구</option>
-      <option value="성동구">성동구</option>
-    </select>
+<div class="section" id="dataSection">
+  <select id="mainCategory">
+    <option value="">구 선택</option>
+    <option value="노원구">노원구</option>
+    <option value="도봉구">도봉구</option>
+    <option value="성북구">성북구</option>
+    <option value="강북구">강북구</option>
+    <option value="중랑구">중랑구</option>
+    <option value="광진구">광진구</option>
+    <option value="동대문구">동대문구</option>
+    <option value="종로구">종로구</option>
+    <option value="성동구">성동구</option>
+  </select>
 
-    <select id="middleCategory" onchange="loadDetailList()">
-      <option value="">역 선택</option>
-    </select>
+  <select id="middleCategory">
+    <option value="">역 선택</option>
+  </select>
 
-    <label><input type="checkbox" id="customMiddleCheck" onchange="toggleMiddleInput()"> 직접 입력</label>
-    <input type="text" id="customMiddleInput" placeholder="역 직접 입력">
-    <input type="text" id="subCategory" list="detailList" placeholder="상세위치 (입력 or 선택)">
-    <datalist id="detailList"></datalist>
+  <label><input type="checkbox" id="customMiddleCheck" onchange="toggleMiddleInput()"> 직접 입력</label>
+  <input type="text" id="customMiddleInput" placeholder="역 직접 입력">
+  <input type="text" id="subCategory" list="detailList" placeholder="상세위치 (입력 or 선택)">
+  <datalist id="detailList"></datalist>
 
-    <div class="button-group">
-      <button onclick="selectResult('O')">⭕</button>
-      <button onclick="submitData('X')">❌</button>
-    </div>
-
-    <div id="sub-options">
-      <button onclick="showAgeInput()">찾기</button>
-      <button onclick="showReasonOptions()">비합</button>
-    </div>
-
-    <div id="age-input">
-      <label>나이 입력</label>
-      <input type="number" id="age" min="0" max="120">
-      <button onclick="submitData('O', '찾기')">전송</button>
-    </div>
-
-    <div id="reason-options">
-      <button onclick="submitData('O', '비합', '미성년자')">미성년자</button>
-      <button onclick="submitData('O', '비합', '27세 이상')">27세 이상</button>
-      <button onclick="submitData('O', '비합', '거리')">거리</button>
-      <button onclick="submitData('O', '비합', '환경')">환경</button>
-      <button onclick="submitData('O', '비합', '인성')">인성</button>
-    </div>
+  <div class="button-group">
+    <button onclick="selectResult('O')">⭕</button>
+    <button onclick="submitData('X')">❌</button>
   </div>
 
-  <script>
-    function selectResult(result) {
-      if (result === 'O') {
-        document.getElementById('sub-options').style.display = 'block';
-        document.getElementById('age-input').style.display = 'none';
-        document.getElementById('reason-options').style.display = 'none';
-      } else {
-        submitData('X');
-      }
-    }
+  <div id="sub-options">
+    <button onclick="showAgeInput()">찾기</button>
+    <button onclick="showReasonOptions()">비합</button>
+  </div>
 
-    function showAgeInput() {
-      document.getElementById('age-input').style.display = 'block';
-      document.getElementById('reason-options').style.display = 'none';
-    }
+  <div id="age-input">
+    <label>나이 입력</label>
+    <input type="number" id="age" min="0" max="120">
+    <button onclick="submitData('O', '찾기')">전송</button>
+  </div>
 
-    function showReasonOptions() {
-      document.getElementById('reason-options').style.display = 'block';
-      document.getElementById('age-input').style.display = 'none';
-    }
+  <div id="reason-options">
+    <button onclick="submitData('O', '비합', '미성년자')">미성년자</button>
+    <button onclick="submitData('O', '비합', '27세 이상')">27세 이상</button>
+    <button onclick="submitData('O', '비합', '거리')">거리</button>
+    <button onclick="submitData('O', '비합', '환경')">환경</button>
+    <button onclick="submitData('O', '비합', '인성')">인성</button>
+  </div>
+</div>
 
-    function toggleMiddleInput() {
-      const check = document.getElementById('customMiddleCheck').checked;
-      document.getElementById('customMiddleInput').style.display = check ? 'block' : 'none';
-    }
+<div id="reportPopup">
+  <div id="reportContent"></div>
+  <label>▫️활동 피드백</label>
+  <textarea id="feedbackText" rows="3"></textarea>
+  <button onclick="copyReport()">📋 복사</button>
+  <button onclick="closePopup()">닫기</button>
+</div>
 
-    function updateLocation() {
-      // 이 함수는 추후 시트에서 역 목록 불러오기에 사용
-    }
-
-    function loadDetailList() {
-      // 이 함수는 추후 상세위치 datalist 불러오기에 사용
-    }
-
-    function submitData(mainResult, subResult = '', reason = '') {
-      alert(`전송됨: ${mainResult}, ${subResult}, ${reason}`);
-      document.getElementById('sub-options').style.display = 'none';
+<script>
+  function selectResult(result) {
+    if (result === 'O') {
+      document.getElementById('sub-options').style.display = 'block';
       document.getElementById('age-input').style.display = 'none';
       document.getElementById('reason-options').style.display = 'none';
+    } else {
+      submitData('X');
     }
-  </script>
+  }
+
+  function showAgeInput() {
+    document.getElementById('age-input').style.display = 'block';
+    document.getElementById('reason-options').style.display = 'none';
+  }
+
+  function showReasonOptions() {
+    document.getElementById('reason-options').style.display = 'block';
+    document.getElementById('age-input').style.display = 'none';
+  }
+
+  function toggleMiddleInput() {
+    const check = document.getElementById('customMiddleCheck').checked;
+    document.getElementById('customMiddleInput').style.display = check ? 'block' : 'none';
+  }
+
+  function submitData(main, sub = '', reason = '') {
+    alert(`전송됨: ${main}, ${sub}, ${reason}`);
+    document.getElementById('sub-options').style.display = 'none';
+    document.getElementById('age-input').style.display = 'none';
+    document.getElementById('reason-options').style.display = 'none';
+  }
+</script>
 
 </body>
 </html>
