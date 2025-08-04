@@ -41,9 +41,12 @@
       padding: 20px;
       box-shadow: 0 0 10px #aaa;
       z-index: 999;
-      width: 90%;
-      max-width: 350px;
+
+      /* ✅ 아래 2줄 수정 또는 추가 */
+      width: 95vw;       /* 모바일 기준 화면의 95% 너비 */
+      max-width: none;   /* 고정 최대폭 제한 제거 */
     }
+
     #reportContent {
       white-space: pre-wrap;
       margin-bottom: 10px;
