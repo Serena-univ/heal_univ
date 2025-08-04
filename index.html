@@ -7,13 +7,18 @@
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
+      font-size: 4.5vw; /* 반응형 글씨 크기 */
+      color: #007BFF; /* 청량한 파란색 */
     }
     button, select, input[type="text"], input[type="number"] {
       margin: 8px 0;
-      padding: 10px 14px;
-      font-size: 16px;
+      padding: 3.5vw;
+      font-size: 4.8vw;
       width: 100%;
       box-sizing: border-box;
+      color: #007BFF;
+      border: 1px solid #007BFF;
+      background-color: #ffffff;
     }
     .active-team {
       background-color: #4caf50 !important;
@@ -45,90 +50,34 @@
     }
     #timerDisplay {
       font-weight: bold;
-      font-size: 20px;
-      color: #333;
+      font-size: 4.8vw;
+      color: #007BFF;
     }
     #startButton.active {
-      background-color: #2196F3;
+      background-color: #007BFF;
       color: #fff;
     }
     #liveReport {
       margin-top: 10px;
-      font-size: 16px;
-      color: #444;
+      font-size: 4.4vw;
+      color: #007BFF;
     }
     label {
       display: block;
       margin-top: 8px;
       font-weight: bold;
+      font-size: 4.8vw;
+      color: #007BFF;
     }
     textarea {
       width: 100%;
-      font-size: 16px;
+      font-size: 4.8vw;
       min-height: 80px;
       margin-top: 5px;
-    }
-    @media (max-width: 480px) {
-      button, select, input[type="text"], input[type="number"] {
-        font-size: 18px;
-        padding: 12px;
-      }
-      #timerDisplay {
-        font-size: 18px;
-      }
+      color: #007BFF;
     }
   </style>
-  <script>
-    function selectResult(result) {
-      if (result === 'O') {
-        document.getElementById('sub-options').style.display = 'block';
-        document.getElementById('age-input').style.display = 'none';
-        document.getElementById('reason-options').style.display = 'none';
-      } else {
-        submitData('X');
-      }
-    }
-
-    function showAgeInput() {
-      document.getElementById('age-input').style.display = 'block';
-      document.getElementById('reason-options').style.display = 'none';
-    }
-
-    function showReasonOptions() {
-      document.getElementById('reason-options').style.display = 'block';
-      document.getElementById('age-input').style.display = 'none';
-    }
-
-    function toggleMiddleInput() {
-      const check = document.getElementById('customMiddleCheck').checked;
-      document.getElementById('customMiddleInput').style.display = check ? 'block' : 'none';
-    }
-
-    function submitData(mainResult, subResult = '', reason = '') {
-      alert(`전송됨: ${mainResult}, ${subResult}, ${reason}`);
-      // 초기화
-      document.getElementById('sub-options').style.display = 'none';
-      document.getElementById('age-input').style.display = 'none';
-      document.getElementById('reason-options').style.display = 'none';
-    }
-
-    function updateLocation() {
-      // 이후 스프레드시트 연결 시 사용
-    }
-
-    function loadDetailList() {
-      // 이후 스프레드시트 연결 시 사용
-    }
-
-    function copyReport() {
-      navigator.clipboard.writeText(document.getElementById('reportContent').innerText)
-        .then(() => alert("복사 완료!"));
-    }
-
-    function closePopup() {
-      document.getElementById('reportPopup').style.display = 'none';
-    }
-  </script>
+  <script src="main.js"></script>
 </head>
 <body>
   <h2>📍 서야 대학가 소성</h2>
@@ -155,7 +104,7 @@
     </div>
   </div>
 
-  <div id="dataSection" style="display:block;">
+  <div id="dataSection" style="display:none;">
     <select id="mainCategory" onchange="updateLocation()">
       <option value="">구 선택</option>
       <option value="노원구">노원구</option>
@@ -216,4 +165,5 @@
     <button onclick="closePopup()">닫기</button>
   </div>
 </body>
+>
 </html>
