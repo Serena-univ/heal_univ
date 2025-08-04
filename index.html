@@ -275,6 +275,25 @@
         document.getElementById("reason-options").style.display = "none";
     }
 
+    function submitDetailIfNeeded() {
+        const gu = document.getElementById("mainCategory").value;
+        const station = document.getElementById("customMiddleCheck").checked
+            ? document.getElementById("customMiddleInput").value
+            : document.getElementById("middleCategory").value;
+        const detail = document.getElementById("subCategory").value;
+
+        if (!gu || !station || !detail) return;
+
+        fetch(`${GAS_URL}?action=saveDetail&gu=${gu}&station=${encodeURIComponent(station)}&detail=${encodeURIComponent(detail)}`)
+            .then(res => res.text())
+            .then(msg => {
+                console.log("상세위치 저장 응답:", msg);
+            })
+            .catch(err => {
+                console.error("상세위치 저장 실패", err);
+            });
+    }
+
     function copyReport() {
       const content = document.getElementById("reportContent").innerText;
       const feedback = document.getElementById("feedbackText").value;
