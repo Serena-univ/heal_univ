@@ -22,6 +22,73 @@
     #startButton.active { background-color: #2196F3; color: #fff; }
     #liveReport { margin-top: 10px; font-size: 14px; color: #444; }
   </style>
+  <script>
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbwdrG0hu8TLSJuwf2C1u6J-7TyVRaS8jZxt3b7JlreJzga1f27GHboxba7G6yLSsl_0/exec";
+
+    async function updateDistricts() {
+      const main = document.getElementById("mainCategory");
+      main.innerHTML = '<option value="">구 선택</option>';
+      try {
+        const response = await fetch(`${GAS_URL}?action=getDistricts`);
+        const data = await response.json();
+        data.forEach(d => {
+          const opt = document.createElement("option");
+          opt.value = d;
+          opt.textContent = d;
+          main.appendChild(opt);
+        });
+      } catch (e) {
+        alert("구 목록을 불러오지 못했습니다.");
+      }
+    }
+
+    async function updateStations() {
+      const gu = document.getElementById("mainCategory").value;
+      const middle = document.getElementById("middleCategory");
+      middle.innerHTML = '<option value="">역 선택</option>';
+      document.getElementById("detailList").innerHTML = "";
+      if (!gu) return;
+      try {
+        const response = await fetch(`${GAS_URL}?action=getStations&gu=${encodeURIComponent(gu)}`);
+        const data = await response.json();
+        data.forEach(station => {
+          const opt = document.createElement("option");
+          opt.value = station;
+          opt.textContent = station;
+          middle.appendChild(opt);
+        });
+      } catch (e) {
+        alert("역 목록을 불러오지 못했습니다.");
+      }
+    }
+
+    async function loadDetailList() {
+      const gu = document.getElementById("mainCategory").value;
+      const station = document.getElementById("middleCategory").value;
+      const datalist = document.getElementById("detailList");
+      datalist.innerHTML = "";
+      if (!gu || !station) return;
+      try {
+        const response = await fetch(`${GAS_URL}?action=getDetails&gu=${encodeURIComponent(gu)}&station=${encodeURIComponent(station)}`);
+        const data = await response.json();
+        data.forEach(detail => {
+          const opt = document.createElement("option");
+          opt.value = detail;
+          datalist.appendChild(opt);
+        });
+      } catch (e) {
+        alert("상세위치 목록을 불러오지 못했습니다.");
+      }
+    }
+
+    function toggleMiddleInput() {
+      const checked = document.getElementById("customMiddleCheck").checked;
+      document.getElementById("customMiddleInput").style.display = checked ? "inline-block" : "none";
+      document.getElementById("middleCategory").style.display = checked ? "none" : "inline-block";
+    }
+
+    window.onload = updateDistricts;
+  </script>
 </head>
 <body>
   <h2>📍 서야 대학가 소성</h2>
