@@ -328,10 +328,45 @@
     }
 
     function copyReport() {
-      const content = document.getElementById("reportContent").innerText;
-      const feedback = document.getElementById("feedbackText").value;
-      const fullText = `${content}\n▫️활동피드백: ${feedback}`;
-      navigator.clipboard.writeText(fullText).then(() => alert("복사 완료!"));
+        const content = document.getElementById("reportContent").innerText;
+        const feedback = document.getElementById("feedbackText").value;
+        const fullText = `${content}\n▫️활동피드백: ${feedback}`;
+        navigator.clipboard.writeText(fullText).then(() => {
+            alert("복사 완료!");
+            resetToInitialPage(); // ✅ 복사 후 초기화
+        });
+    }
+
+    function resetToInitialPage() {
+        // 타이머 초기화
+        clearInterval(timerInterval);
+        document.getElementById("timerDisplay").innerText = "⏱ 소요 시간: 0시간 0분";
+
+        // 통계 초기화
+        totalLogs = 0;
+        stopCount = 0;
+        findCount = 0;
+
+        // 팀 선택 초기화
+        for (let i = 1; i <= 4; i++) {
+            document.getElementById(`team${i}`).classList.remove('active-team');
+        }
+        selectedTeam = "";
+
+        // 입력값 초기화
+        document.getElementById("participantInput").value = "";
+        document.getElementById("subCategory").value = "";
+        document.getElementById("customMiddleInput").value = "";
+        document.getElementById("middleCategory").value = "";
+        document.getElementById("mainCategory").value = "";
+        document.getElementById("age").value = "";
+        document.getElementById("feedbackText").value = "";
+
+        // 화면 전환
+        document.getElementById("liveStats").style.display = "none";
+        document.getElementById("dataSection").style.display = "none";
+        document.getElementById("initialSection").style.display = "block";
+        document.getElementById("reportPopup").style.display = "none";
     }
 
     function closePopup() {
