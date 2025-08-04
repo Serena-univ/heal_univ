@@ -225,6 +225,56 @@
           console.error("상세위치 저장 실패", err);
         });
     }
+    function submitData(result, subResult = "", reason = "") {
+        const gu = document.getElementById("mainCategory").value;
+        const station = document.getElementById("customMiddleCheck").checked
+            ? document.getElementById("customMiddleInput").value
+            : document.getElementById("middleCategory").value;
+        const detail = document.getElementById("subCategory").value;
+        const age = document.getElementById("age")?.value || "";
+
+        if (!gu || !station || !detail) {
+            alert("장소(구/역/상세위치)를 모두 입력해주세요.");
+            return;
+        }
+
+        const payload = new URLSearchParams({
+            team: selectedTeam,
+            main: gu,
+            middle: station,
+            sub: detail,
+            result: result,
+        });
+
+        if (subResult === "찾기") {
+            payload.append("sub_result", "찾기");
+            payload.append("age", age);
+            findCount++;
+        } else if (subResult === "비합") {
+            payload.append("sub_result", "비합");
+            payload.append("reason", reason);
+            stopCount++;
+        } else if (result === "X") {
+            stopCount++;
+        }
+
+        totalLogs++;
+        updateLiveReport();
+        submitDetailIfNeeded(); // 직접 입력 상세위치 저장 요청
+
+        fetch(GAS_URL + "?" + payload.toString())
+            .then(res => res.text())
+            .then(msg => console.log("전송 결과:", msg))
+            .catch(err => console.error("기록 실패", err));
+
+        // 입력값 초기화
+        document.getElementById("subCategory").value = "";
+        document.getElementById("age").value = "";
+        document.getElementById("sub-options").style.display = "none";
+        document.getElementById("age-input").style.display = "none";
+        document.getElementById("reason-options").style.display = "none";
+    }
+
     function copyReport() {
       const content = document.getElementById("reportContent").innerText;
       const feedback = document.getElementById("feedbackText").value;
