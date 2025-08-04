@@ -185,6 +185,29 @@
         });
     }
 
+    function loadDetailList() {
+        const gu = document.getElementById("mainCategory").value;
+        const station = document.getElementById("middleCategory").value;
+
+        if (!gu || !station) return;
+
+        fetch(`${GAS_URL}?action=getDetailList&gu=${gu}&station=${encodeURIComponent(station)}`)
+            .then(res => res.json())
+            .then(detailList => {
+                const dataList = document.getElementById("detailList");
+                dataList.innerHTML = ""; // 기존 옵션 초기화
+
+                detailList.forEach(detail => {
+                    const option = document.createElement("option");
+                    option.value = detail;
+                    dataList.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error("상세위치 로딩 오류:", error);
+            });
+    }
+
     function copyReport() {
       const content = document.getElementById("reportContent").innerText;
       const feedback = document.getElementById("feedbackText").value;
