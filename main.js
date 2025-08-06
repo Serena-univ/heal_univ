@@ -162,8 +162,10 @@ function submitData(result, subResult = "", reason = "") {
     main: gu,
     middle: station,
     sub: detail,
+    tool: tool,
     result: result,
   });
+
 
   if (result === "O") stopCount++;
   if (subResult === "찾기") {
