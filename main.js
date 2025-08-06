@@ -36,6 +36,7 @@ function startTimer() {
   document.getElementById("initialSection").style.display = "none";
   document.getElementById("participantName").innerText = participant;
   document.getElementById("startTimeText").innerText = `시작시간: ${startTime.toLocaleTimeString()}`;
+  document.getElementById("toolName").innerText = tool;
   updateLiveReport();
 
   timerInterval = setInterval(() => {
@@ -67,7 +68,7 @@ function endTimer() {
   const detail = document.getElementById("subCategory").value.trim();
   const locationText = station ? `${station}역 ${detail}` : "";
 
-  const summary = `${dateText}\n${startText}~${endText}, ${Math.floor(durationMin / 60)}시간 ${durationMin % 60}분\n${locationText}\n▫️활동자 : ${participant}\n▫️말걸기 : ${totalLogs}\n▫️스탑 : ${stopCount}\n▫️찾기 : ${findCount}`;
+  const summary = `${dateText}\n${startText}~${endText}, ${Math.floor(durationMin / 60)}시간 ${durationMin % 60}분\n${locationText}\n▫️활동자/도구 : ${participant} / ${tool}\n▫️말걸기 : ${totalLogs}\n▫️스탑 : ${stopCount}\n▫️찾기 : ${findCount}`;
 
   document.getElementById("reportContent").innerText = summary;
   document.getElementById("reportPopup").style.display = "block";
