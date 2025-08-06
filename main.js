@@ -165,6 +165,8 @@ function submitData(result, subResult = "", reason = "") {
   } else if (subResult === "비합") {
     payload.append("sub_result", "비합");
     payload.append("reason", reason);
+  } else if (subResult === "스탑만") {
+  payload.append("sub_result", "스탑만");
   }
 
   totalLogs++;
