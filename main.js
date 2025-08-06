@@ -5,6 +5,7 @@ let selectedTeam = "";
 let startTime = null, timerInterval;
 let totalLogs = 0, stopCount = 0, findCount = 0;
 let participant = "";
+let tool = "";
 
 function selectTeam(team) {
   selectedTeam = team;
@@ -20,6 +21,12 @@ function startTimer() {
     alert("활동자 이름을 입력해주세요.");
     return;
   }
+  tool = document.getElementById("toolInput").value;
+  if (!tool) {
+    alert("도구를 입력해주세요.");
+    return;
+  }
+
   startTime = new Date();
   totalLogs = stopCount = findCount = 0;
   clearInterval(timerInterval);
